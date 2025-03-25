@@ -109,10 +109,10 @@ julia> OffsetArray(a, OffsetArrays.Origin(0)) # set the origin to zero along eac
 
 
 """
-struct OffsetArray{T, N, AA<:AbstractArray{T,N}, I<:Integer} <: AbstractArray{T, N}
+struct OffsetArray{T, N, AA<:AbstractArray{T,N}, I} <: AbstractArray{T, N}
     parent::AA
     offsets::NTuple{N,I}
-    @inline function OffsetArray{T, N, AA}(parent::AA, offsets::NTuple{N, I}; checkoverflow=true) where {T, N, AA<:AbstractArray{T,N}, I<:Integer}
+    @inline function OffsetArray{T, N, AA}(parent::AA, offsets::NTuple{N, I}; checkoverflow=true) where {T, N, AA<:AbstractArray{T,N}, I}
         # allocation of `map` on tuple is optimized away
         checkoverflow && map(overflow_check, axes(parent), offsets)
         new{T, N, AA, I}(parent, offsets)
@@ -128,14 +128,14 @@ end
 
 Type alias and convenience constructor for one-dimensional [`OffsetArray`](@ref)s.
 """
-const OffsetVector{T,AA<:AbstractVector{T},I<:Integer} = OffsetArray{T,1,AA,I}
+const OffsetVector{T,AA<:AbstractVector{T},I} = OffsetArray{T,1,AA,I}
 
 """
     OffsetMatrix(A, index1, index2)
 
 Type alias and convenience constructor for two-dimensional [`OffsetArray`](@ref)s.
 """
-const OffsetMatrix{T,AA<:AbstractMatrix{T},I<:Integer} = OffsetArray{T,2,AA,I}
+const OffsetMatrix{T,AA<:AbstractMatrix{T},I} = OffsetArray{T,2,AA,I}
 
 # checks if the offset may be added to the range without overflowing
 function overflow_check(r::AbstractUnitRange, offset::Integer) 
